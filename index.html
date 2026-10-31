@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>"
+    />
+    <title>Les cours de Charles</title>
+    <script>
+      /* Until the site's code runs, this is all the page has: a word while it comes. A file that does not arrive (the
+         Wi-Fi dropped, a new version replaced it) starts the page again, once; after that the page says so. */
+      ;(function () {
+        var en = location.pathname.indexOf('/lbres2101') >= 0
+        var show = function (text, button) {
+          var boot = document.getElementById('boot')
+          if (!boot) return
+          boot.style.cssText = 'position:fixed;inset:0;display:flex;flex-direction:column;gap:16px;align-items:center;justify-content:center;padding:24px;text-align:center;font:700 20px "Comic Sans MS",cursive,sans-serif'
+          boot.textContent = text
+          if (!button) return
+          var b = document.createElement('button')
+          b.textContent = en ? 'Reload' : 'Recharger'
+          b.style.cssText = 'padding:8px 20px;border:3px solid #000;border-radius:99px;background:#fcd34d;font:inherit;font-weight:900'
+          b.onclick = function () {
+            location.reload()
+          }
+          boot.appendChild(b)
+        }
+        var failed = en ? 'This page could not be loaded.' : "Cette page n'a pas pu se charger."
+        var said = false
+        var give = function () {
+          said = true
+          show(failed, true)
+        }
+        setTimeout(function () {
+          if (!said) show(en ? 'Loading…' : 'Chargement…')
+        }, 500)
+        setTimeout(give, 20000)
+        addEventListener(
+          'error',
+          function (e) {
+            var t = e.target
+            if (!t || (t.tagName !== 'SCRIPT' && t.tagName !== 'LINK') || !document.getElementById('boot')) return
+            try {
+              if (Date.now() - Number(sessionStorage.getItem('cours.recharge')) >= 60000) {
+                sessionStorage.setItem('cours.recharge', String(Date.now()))
+                location.reload()
+                return
+              }
+            } catch (x) {}
+            give()
+          },
+          true,
+        )
+      })()
+    </script>
+    <script type="module" crossorigin src="/cours/assets/index-CEm_C0iL.js"></script>
+    <link rel="stylesheet" crossorigin href="/cours/assets/index-D6DeqT3M.css">
+  </head>
+  <body>
+    <div id="root"><div id="boot"></div></div>
+  </body>
+</html>
